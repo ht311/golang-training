@@ -1,0 +1,187 @@
+openapi: 3.0.0
+info:
+  title: Blog API
+  version: 0.0.0
+tags: []
+paths:
+  /health:
+    get:
+      operationId: Health_check
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                required:
+                  - status
+  /posts:
+    get:
+      operationId: Posts_list
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/PostList'
+                  - $ref: '#/components/schemas/ErrorResponse'
+    post:
+      operationId: Posts_create
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePostRequest'
+  /posts/{id}:
+    get:
+      operationId: Posts_get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      operationId: Posts_update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePostRequest'
+    delete:
+      operationId: Posts_delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    CreatePostRequest:
+      type: object
+      required:
+        - title
+        - body
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+    ErrorResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+    Post:
+      type: object
+      required:
+        - id
+        - title
+        - body
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    PostList:
+      type: object
+      required:
+        - posts
+        - total
+      properties:
+        posts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Post'
+        total:
+          type: integer
+          format: int32
+    UpdatePostRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+    variables: {}

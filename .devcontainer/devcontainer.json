@@ -13,7 +13,10 @@
     "vscode": {
       "extensions": [
         "hashicorp.terraform",
-        "hediet.vscode-drawio"
+        "hediet.vscode-drawio",
+        "arjun.swagger-viewer",
+        "typespec.typespec-vscode",
+        "golang.go"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash"

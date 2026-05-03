@@ -1,0 +1,8 @@
+package: gen
+generate:
+  gin-server: true
+  models: true
+  strict-server: true
+output: gen/blog_api.gen.go
+output-options:
+  skip-prune: true

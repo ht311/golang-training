@@ -1,0 +1,19 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    # schema: golang-migrate のマイグレーションファイルをスキーマとして使う
+    schema: "migrations/"
+    # queries: sqlc がコード生成の元にする SQL クエリファイル
+    queries: "db/query/"
+    gen:
+      go:
+        package: "db"
+        out: "internal/infrastructure/db"
+        # pgx/v5 を直接使う (database/sql 経由にしない)
+        sql_package: "pgx/v5"
+        # TIMESTAMPTZ → time.Time に変換 (pgtype.Timestamptz のまま使わなくて済む)
+        overrides:
+          - db_type: "pg_catalog.timestamptz"
+            go_type:
+              import: "time"
+              type: "Time"
